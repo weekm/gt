@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en"> 
+    <head> 
+        <meta charset="UTF-8"> 
+        <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"> 
+        <meta http-equiv="X-UA-Compatible" content="ie=edge"> 
+        <title>远程网页源代码读取</title> 
+        <style type="text/css">
+/* 页面字体样式 */
+body, td, input, textarea {
+    font-family:Arial;
+    font-size:12px;
+}
+</style> 
+        <script type="text/javascript">
+//用于创建XMLHttpRequest对象
+function createXmlHttp() {
+    //根据window.XMLHttpRequest对象是否存在使用不同的创建方式
+    if (window.XMLHttpRequest) {
+       xmlHttp = new XMLHttpRequest();                  //FireFox、Opera等浏览器支持的创建方式
+    } else {
+       xmlHttp = new ActiveXObject("Microsoft.XMLHTTP");//IE浏览器支持的创建方式
+    }
+}
+
+//直接通过XMLHttpRequest对象获取远程网页源代码
+function getSource() {
+    var url = document.getElementById("url").value;             //获取目标地址信息
+
+    //地址为空时提示用户输入
+    if (url == "") {
+        alert("请输入网页地址。");
+        return;
+    }
+
+    document.getElementById("source").value = "正在加载……";   //提示正在加载
+    createXmlHttp();                                            //创建XMLHttpRequest对象
+    xmlHttp.onreadystatechange = writeSource;                   //设置回调函数
+    xmlHttp.open("GET","https://weekm.github.io/gt/a.php?url="+url,true);
+    xmlHttp.send();
+}
+
+//将远程网页源代码写入页面文字区域
+function writeSource() {
+    if (xmlHttp.readyState == 4) {
+        document.getElementById("source").value = xmlHttp.responseText;
+    }
+}
+</script> 
+    </head> 
+    <body> <!-- <h2>远程网页源代码读取</h2> --> 地址：
+        <input type="text" id="url"> 
+        <input type="button" onclick="getSource()" value="获取源码"> 
+        <br>
+        <br> <textarea rows="40" cols="50%" id="source"></textarea>  
+    </body>
+</html>
